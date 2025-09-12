@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grocery Price Checker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Check Grocery Prices</h1>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="itemInput" placeholder="Enter Item Name">
+            <button onclick="searchPrice()">Search</button>
+        </div>
+        <div id="loading" class="loading-spinner" style="display:none;"></div>
+    </div>
+    <div id="results"></div>
+
+    <script>
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'flex' : 'none';
+        }
+
+        function searchPrice() {
+            var item = document.getElementById('itemInput').value.toLowerCase();
+            var url = 'https://script.google.com/macros/s/AKfycbxZg8MoNCMXNKd079DCMXR9A0TNl2z595dTqBgpu7hKyEtIH87fD46ek2DU6oOLa9ww/exec';
+            document.getElementById('results').innerHTML = '';
+            showLoading(true);
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                var filtered = data.filter(entry => entry['Grocery Item'] && entry['Grocery Item'].toLowerCase().includes(item));
+                var html = '<ul>';
+                filtered.forEach(entry => {
+                    html += `<li><b>${entry['Grocery Item']}</b><br>
+                        Assam: ${entry['Price (INR) - Assam']} INR (Store: ${entry['Store/Market - Assam'] || 'N/A'})<br>
+                        New York: ${entry['Price (USD) - New York']} USD (Store: ${entry['Store/Market - New York'] || 'N/A'})</li>`;
+                });
+                html += '</ul>';
+                document.getElementById('results').innerHTML = html;
+                showLoading(false);
+            })
+            .catch(err => {
+                document.getElementById('results').innerHTML = "Error fetching data.";
+                showLoading(false);
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
