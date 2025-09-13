@@ -5,6 +5,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="location-bar">
+        <label for="locationSelect"><b>Deliver to:</b></label>
+        <select id="locationSelect">
+            <option value="Assam">Assam</option>
+            <option value="New York">New York</option>
+        </select>
+    </div>
     <h1>Check Grocery Prices</h1>
     <div class="container">
         <div class="search-bar">
@@ -22,6 +29,7 @@
 
         function searchPrice() {
             var item = document.getElementById('itemInput').value.toLowerCase();
+            var location = document.getElementById('locationSelect').value;
             var url = 'https://script.google.com/macros/s/AKfycbxZg8MoNCMXNKd079DCMXR9A0TNl2z595dTqBgpu7hKyEtIH87fD46ek2DU6oOLa9ww/exec';
             document.getElementById('results').innerHTML = '';
             showLoading(true);
@@ -29,12 +37,19 @@
             fetch(url)
             .then(response => response.json())
             .then(data => {
-                var filtered = data.filter(entry => entry['Grocery Item'] && entry['Grocery Item'].toLowerCase().includes(item));
+                var filtered = data.filter(entry =>
+                    entry['Grocery Item'] &&
+                    entry['Grocery Item'].toLowerCase().includes(item)
+                );
                 var html = '<ul>';
                 filtered.forEach(entry => {
-                    html += `<li><b>${entry['Grocery Item']}</b><br>
-                        Assam: ${entry['Price (INR) - Assam']} INR (Store: ${entry['Store/Market - Assam'] || 'N/A'})<br>
-                        New York: ${entry['Price (USD) - New York']} USD (Store: ${entry['Store/Market - New York'] || 'N/A'})</li>`;
+                    if (location === "Assam" && entry['Price (INR) - Assam']) {
+                        html += `<li><b>${entry['Grocery Item']}</b><br>
+                            Assam: ${entry['Price (INR) - Assam']} INR (Store: ${entry['Store/Market - Assam'] || 'N/A'})</li>`;
+                    } else if (location === "New York" && entry['Price (USD) - New York']) {
+                        html += `<li><b>${entry['Grocery Item']}</b><br>
+                            New York: ${entry['Price (USD) - New York']} USD (Store: ${entry['Store/Market - New York'] || 'N/A'})</li>`;
+                    }
                 });
                 html += '</ul>';
                 document.getElementById('results').innerHTML = html;
