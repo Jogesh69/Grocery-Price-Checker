@@ -7,6 +7,37 @@ body {
     padding: 0;
 }
 
+.location-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #232526;
+    color: #fffbe7;
+    padding: 18px 0 10px 0;
+    font-size: 1.1rem;
+    gap: 10px;
+    box-shadow: 0 2px 8px #0002;
+}
+
+.location-bar select {
+    background: #ffb300;
+    color: #232526;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.location-bar select:focus {
+    background: #ff6f00;
+    color: #fff;
+}
+
 h1 {
     text-align: center;
     color: #ffb300;
@@ -146,5 +177,10 @@ li b {
         flex-direction: column;
         gap: 8px;
         padding: 8px 4px;
+    }
+    .location-bar {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 1rem;
     }
 }
